@@ -1,0 +1,13 @@
+c:\users\piotti\documents\visual studio 2017\Projects\BLE\BLE\bin\Release\BLE.exe.config
+c:\users\piotti\documents\visual studio 2017\Projects\BLE\BLE\bin\Release\BLE.exe
+c:\users\piotti\documents\visual studio 2017\Projects\BLE\BLE\bin\Release\BLE.pdb
+c:\users\piotti\documents\visual studio 2017\Projects\BLE\BLE\obj\Release\MainWindow.g.cs
+c:\users\piotti\documents\visual studio 2017\Projects\BLE\BLE\obj\Release\App.g.cs
+c:\users\piotti\documents\visual studio 2017\Projects\BLE\BLE\obj\Release\BLE_MarkupCompile.cache
+c:\users\piotti\documents\visual studio 2017\Projects\BLE\BLE\obj\Release\BLE_MarkupCompile.lref
+c:\users\piotti\documents\visual studio 2017\Projects\BLE\BLE\obj\Release\MainWindow.baml
+c:\users\piotti\documents\visual studio 2017\Projects\BLE\BLE\obj\Release\BLE.g.resources
+c:\users\piotti\documents\visual studio 2017\Projects\BLE\BLE\obj\Release\BLE.Properties.Resources.resources
+c:\users\piotti\documents\visual studio 2017\Projects\BLE\BLE\obj\Release\BLE.csproj.GenerateResource.Cache
+c:\users\piotti\documents\visual studio 2017\Projects\BLE\BLE\obj\Release\BLE.exe
+c:\users\piotti\documents\visual studio 2017\Projects\BLE\BLE\obj\Release\BLE.pdb
