@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CySmart.DongleCommunicator.API;
+using System.Windows.Controls.Primitives;
 
 namespace BLE
 {
@@ -22,15 +23,16 @@ namespace BLE
     public partial class MainWindow : Window
     {
         private bool connected = false;
-        private Dongle dongle;
-
+        private DongleViewModel dvm;
 
 
         public MainWindow()
         {
             InitializeComponent();
-            dongle = new Dongle();
-            this.DataContext = dongle;
+            dvm = new DongleViewModel();
+            this.DataContext = dvm;
+
+
         }
 
         public void updateTemp(float temp)
@@ -54,7 +56,7 @@ namespace BLE
                 return;
             }
             
-            CyApiErr err = dongle.turnOnTempNotifs();
+            CyApiErr err = dvm.turnOnTempNotifs();
             if (err.IsNotOk)
             {
                 MessageBox.Show(err.Message);
@@ -64,7 +66,7 @@ namespace BLE
 
         private void tempNotifCheck_Unchecked(object sender, RoutedEventArgs e)
         {
-            CyApiErr err = dongle.turnOffTempNotifs();
+            CyApiErr err = dvm.turnOffTempNotifs();
             if (err.IsNotOk)
             {
                 MessageBox.Show(err.Message);
@@ -79,7 +81,7 @@ namespace BLE
                 pressureNotifCheck.IsChecked = false;
                 return;
             }
-            CyApiErr err = dongle.turnOnPressureNotifs();
+            CyApiErr err = dvm.turnOnPressureNotifs();
             if (err.IsNotOk)
             {
                 MessageBox.Show(err.Message);
@@ -89,7 +91,7 @@ namespace BLE
 
         private void pressureNotifCheck_Unchecked(object sender, RoutedEventArgs e)
         {
-            CyApiErr err = dongle.turnOffPressureNotifs();
+            CyApiErr err = dvm.turnOffPressureNotifs();
             if (err.IsNotOk)
             {
                 MessageBox.Show(err.Message);
@@ -103,7 +105,7 @@ namespace BLE
             {
                 string com = portNameBox.Text;
                 
-                CyApiErr err = dongle.connect(com);
+                CyApiErr err = dvm.connect(com);
                 if (err.IsOk)
                 {
                     connectBtn.Content = "Disconnect";
@@ -114,10 +116,99 @@ namespace BLE
                 }
             } else
             {
-                //disconnect
-                connectBtn.Content = "Connect";
-                connected = false;
+                dvm.disconnect();
+                Application.Current.Shutdown();
             }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            CyApiErr err = dvm.readAddress();
+            if (err.IsNotOk)
+            {
+                MessageBox.Show(err.Message);
+            }
+        }
+
+        private bool dragStarted = false;
+
+        private void Slider_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            int temp = (int)((20 + ((Slider)sender).Value * 28) / 5) * 5;
+            CyApiErr err = dvm.updateSetpoint(temp);
+            if (err.IsNotOk)
+                MessageBox.Show(err.Message);
+            this.dragStarted = false;
+        }
+
+        private void Slider_DragStarted(object sender, DragStartedEventArgs e)
+        {
+            this.dragStarted = true;
+        }
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            int temp = (int)((20 + e.NewValue * 28) / 5) * 5;
+            setpointBox.Text = "Setpoint: " + temp + " deg C";
+            if (!dragStarted)
+            {
+                CyApiErr err = dvm.updateSetpoint(temp);
+                if (err.IsNotOk)
+                    MessageBox.Show(err.Message);
+            }
+
+
+        }
+
+        private bool motorDragStarted = false;
+
+        private void motorSlider_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            int perc = (int)(((Slider)sender).Value*2) * 5;
+            CyApiErr err = dvm.updateMotorSpeed(perc);
+            if (err.IsNotOk)
+                MessageBox.Show(err.Message);
+            this.motorDragStarted = false;
+        }
+
+        private void motorSlider_DragStarted(object sender, DragStartedEventArgs e)
+        {
+            this.motorDragStarted = true;
+        }
+
+        private void motorSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            int perc = (int)(((Slider)sender).Value * 2) * 5;
+            motorSpeedBox.Text = perc==0 ? "Off": perc + "%";
+            if (!motorDragStarted)
+            {
+                CyApiErr err = dvm.updateMotorSpeed(perc);
+                if (err.IsNotOk)
+                    MessageBox.Show(err.Message);
+            }
+
+            
+        }
+
+        private void thermoControllerCheck_Checked(object sender, RoutedEventArgs e)
+        {
+            CyApiErr err = dvm.turnOnThermoController();
+            if (err.IsNotOk)
+                MessageBox.Show(err.Message);
+        }
+        private void thermoControllerCheck_Unchecked(object sender, RoutedEventArgs e)
+        {
+            CyApiErr err = dvm.turnOffThermoController();
+            if (err.IsNotOk)
+                MessageBox.Show(err.Message);
+        }
+
+        private void hapticPresetSendBox_Click(object sender, RoutedEventArgs e)
+        {
+            int preset = Int32.Parse(hapticPresetBox.Text);
+            CyApiErr err = dvm.hapticPreset(preset);
+            if (err.IsNotOk)
+                MessageBox.Show(err.Message);
+
         }
     }
 }

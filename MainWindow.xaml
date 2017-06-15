@@ -6,19 +6,31 @@
         xmlns:local="clr-namespace:BLE"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
+
     <Grid>
-        <TextBlock HorizontalAlignment="Left" Margin="26,22,0,0" TextWrapping="Wrap" Text="Temperature" VerticalAlignment="Top" FontSize="18"/>
-        <TextBlock x:Name="tempBox" Text="{Binding Temperature}" HorizontalAlignment="Left" Margin="48,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <CheckBox x:Name="tempNotifCheck" Content="Receive Temperature Notifications" HorizontalAlignment="Left" Margin="26,73,0,0" VerticalAlignment="Top" Checked="tempNotifCheck_Checked" Unchecked="tempNotifCheck_Unchecked"/>
-        <TextBlock HorizontalAlignment="Left" Margin="308,22,0,0" TextWrapping="Wrap" Text="Pressure" VerticalAlignment="Top" FontSize="18"/>
-        <TextBlock x:Name="pressureBox" Text="{Binding Pressure}" HorizontalAlignment="Left" Margin="374,46,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <CheckBox x:Name="pressureNotifCheck" Content="Receive Pressure Notifications" Margin="308,73,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Checked="pressureNotifCheck_Checked" Unchecked="pressureNotifCheck_Unchecked"/>
-        <Slider x:Name="motorSlider" HorizontalAlignment="Left" Margin="48,145,0,0" VerticalAlignment="Top" Orientation="Vertical" RenderTransformOrigin="-0.136,0.7" Height="125"/>
-        <TextBlock HorizontalAlignment="Left" Margin="26,124,0,0" TextWrapping="Wrap" Text="Motor Speed" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="161,0,0,0" TextWrapping="Wrap" Text="Stack Address:" VerticalAlignment="Top"/>
-        <TextBlock x:Name="addrBox" HorizontalAlignment="Left" Margin="260,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="0"/><LineBreak/><Run/></TextBlock>
-        <TextBlock HorizontalAlignment="Left" Margin="228,145,0,0" TextWrapping="Wrap" Text="Port Name:" VerticalAlignment="Top"/>
-        <TextBox x:Name="portNameBox" HorizontalAlignment="Left" Height="23" Margin="294,142,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="81"/>
-        <Button x:Name="connectBtn" Content="Connect" HorizontalAlignment="Left" Margin="390,146,0,0" VerticalAlignment="Top" Width="75" Click="connectBtn_Click"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="256*"/>
+            <ColumnDefinition Width="261*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock HorizontalAlignment="Left" Margin="26,42,0,0" TextWrapping="Wrap" Text="Temperature" VerticalAlignment="Top" FontSize="18" RenderTransformOrigin="0.502,0.89" Height="24" Width="102"/>
+        <TextBlock x:Name="tempBox" HorizontalAlignment="Left" Margin="33,66,0,0" Text="{Binding Path=Temperature, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" Height="32" Width="200" TextAlignment="Right"/>
+        <CheckBox x:Name="tempNotifCheck" Content="Receive Temperature Notifications" HorizontalAlignment="Left" Margin="26,112,0,0" VerticalAlignment="Top" Checked="tempNotifCheck_Checked" Unchecked="tempNotifCheck_Unchecked" Height="16" Width="199"/>
+        <TextBlock HorizontalAlignment="Left" Margin="136,42,0,0" TextWrapping="Wrap" Text="Pressure" VerticalAlignment="Top" FontSize="18" Grid.Column="1" Height="24" Width="67"/>
+        <TextBlock x:Name="pressureBox" HorizontalAlignment="Left" Margin="35,66,0,0" Text="{Binding Path=Pressure, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" Grid.Column="1" Height="32" Width="200" TextAlignment="Right"/>
+        <CheckBox x:Name="pressureNotifCheck" Content="Receive Pressure Notifications" Margin="45,112,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Checked="pressureNotifCheck_Checked" Unchecked="pressureNotifCheck_Unchecked" Grid.Column="1" Height="16" Width="176"/>
+        <Slider x:Name="motorSlider" HorizontalAlignment="Left" Margin="47,164,0,0" VerticalAlignment="Top" Orientation="Vertical" RenderTransformOrigin="-0.136,0.7" Height="126" Width="22" ValueChanged="motorSlider_ValueChanged" Thumb.DragStarted="motorSlider_DragStarted" Thumb.DragCompleted="motorSlider_DragCompleted"/>
+        <TextBlock HorizontalAlignment="Left" Margin="39,143,0,0" TextWrapping="Wrap" Text="Motor Speed" VerticalAlignment="Top" Height="16" Width="69"/>
+        <TextBlock x:Name="addrBox" HorizontalAlignment="Left" Margin="157,7,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="1" Height="32" Width="100"><Run Text="{Binding Path=StackAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/><LineBreak/><Run/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="26,10,0,0" TextWrapping="Wrap" Text="Port Name:" VerticalAlignment="Top" Height="16" Width="60"/>
+        <TextBox x:Name="portNameBox" HorizontalAlignment="Left" Height="19" Margin="91,7,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="80" Text="COM11"/>
+        <Button x:Name="connectBtn" Content="Connect" HorizontalAlignment="Left" Margin="176,4,0,0" VerticalAlignment="Top" Width="75" Click="connectBtn_Click" Height="22"/>
+        <Button Content="Read Address" HorizontalAlignment="Left" Margin="58,4,0,0" VerticalAlignment="Top" Width="83" Click="Button_Click_1" Grid.Column="1" Height="22"/>
+        <CheckBox x:Name="thermoControllerCheck" Content="Thermo-controller" HorizontalAlignment="Left" Margin="137,143,0,0" VerticalAlignment="Top" Height="16" Width="114" Checked="thermoControllerCheck_Checked" Unchecked="thermoControllerCheck_Unchecked"/>
+        <Slider x:Name="setpointSlider" HorizontalAlignment="Left" Margin="183,164,0,0" VerticalAlignment="Top" Orientation="Vertical" ValueChanged="Slider_ValueChanged" Thumb.DragStarted="Slider_DragStarted" Thumb.DragCompleted="Slider_DragCompleted" Width="25" Height="126"/>
+        <TextBlock x:Name="setpointBox" HorizontalAlignment="Left" Margin="139,295,0,0" TextWrapping="Wrap" Text="Setpoint: 20 deg C" VerticalAlignment="Top" Width="117"/>
+        <TextBlock x:Name="motorSpeedBox" HorizontalAlignment="Left" Margin="47,295,0,0" TextWrapping="Wrap" Text="Off" VerticalAlignment="Top" TextAlignment="Center"/>
+        <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,180,0,0" TextWrapping="Wrap" Text="Haptic Preset:" VerticalAlignment="Top" RenderTransformOrigin="0.521,0.021"/>
+        <TextBox x:Name="hapticPresetBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="88,177,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="53"/>
+        <Button x:Name="hapticPresetSendBox" Content="Send" Grid.Column="1" HorizontalAlignment="Left" Margin="146,177,0,0" VerticalAlignment="Top" Width="75" Click="hapticPresetSendBox_Click"/>
     </Grid>
 </Window>

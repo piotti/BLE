@@ -34,13 +34,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="cybleautobase">
-      <HintPath>..\..\..\..\..\Desktop\cs test\cybleautobase.dll</HintPath>
+      <HintPath>.\cybleautobase.dll</HintPath>
     </Reference>
     <Reference Include="cyblecommonbase">
-      <HintPath>..\..\..\..\..\Desktop\cs test\cyblecommonbase.dll</HintPath>
+      <HintPath>.\cyblecommonbase.dll</HintPath>
     </Reference>
     <Reference Include="cybledonglecommunicator">
-      <HintPath>..\..\..\..\..\Desktop\cs test\cybledonglecommunicator.dll</HintPath>
+      <HintPath>.\cybledonglecommunicator.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -71,6 +71,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Dongle.cs" />
+    <Compile Include="DongleViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

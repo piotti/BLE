@@ -1,0 +1,16 @@
+C:\Users\user1\Desktop\BLE\bin\Debug\BLE.exe
+C:\Users\user1\Desktop\BLE\bin\Debug\BLE.exe.config
+C:\Users\user1\Desktop\BLE\bin\Debug\cybleautobase.dll
+C:\Users\user1\Desktop\BLE\bin\Debug\cyblecommonbase.dll
+C:\Users\user1\Desktop\BLE\bin\Debug\cybledonglecommunicator.dll
+C:\Users\user1\Desktop\BLE\obj\Debug\MainWindow.g.cs
+C:\Users\user1\Desktop\BLE\obj\Debug\App.g.cs
+C:\Users\user1\Desktop\BLE\obj\Debug\BLE_MarkupCompile.cache
+C:\Users\user1\Desktop\BLE\obj\Debug\BLE_MarkupCompile.lref
+C:\Users\user1\Desktop\BLE\obj\Debug\App.baml
+C:\Users\user1\Desktop\BLE\obj\Debug\MainWindow.baml
+C:\Users\user1\Desktop\BLE\obj\Debug\BLE.g.resources
+C:\Users\user1\Desktop\BLE\obj\Debug\BLE.Properties.Resources.resources
+C:\Users\user1\Desktop\BLE\obj\Debug\BLE.csproj.GenerateResource.Cache
+C:\Users\user1\Desktop\BLE\obj\Debug\BLE.exe
+C:\Users\user1\Desktop\BLE\obj\Debug\BLE.pdb

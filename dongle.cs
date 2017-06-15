@@ -16,9 +16,6 @@ namespace BLE
     class Dongle : IDisposable
     {
 
-        public string Temperature { get; set; }
-        public string Pressure { get; set; }
-
 
         #region Setup Constants
 
@@ -30,6 +27,7 @@ namespace BLE
             new CyBleBdAddress(0x00A050A47A8D, CyBleBdAddressType.PUBLIC_ADDRESS);
 
         // CCCD attribute handle of the characteristic whose notification needs to be monitored
+        const ushort TEMPERATURE_HANDLE = 0x0012; //temp & setpoint
         const ushort TEMPERATURE_CCCD_HANDLE = 0x0013; //notifs
         const ushort PRESSURE_CCCD_HANDLE = 0x001B; //notifs
         const ushort TEMP_CONTROLL_ONOFF_HANDLE = 0x0016; //write
@@ -91,7 +89,9 @@ namespace BLE
 
         #region ctor
 
-        public Dongle()
+        private DongleViewModel dvm;
+
+        public Dongle(DongleViewModel dvm)
         {
             m_communicator = null;
             m_deviceCb = null;
@@ -99,8 +99,7 @@ namespace BLE
             m_peerDevice = null;
             m_gattClientCb = null;
 
-            Temperature = "";
-            Pressure = "";
+            this.dvm = dvm; 
         }
 
         #endregion
@@ -122,6 +121,7 @@ namespace BLE
 
             return err;
         }
+
 
         /// <summary>
         /// Connect to peer BLE device
@@ -220,6 +220,7 @@ namespace BLE
                 if (status != CyStatus.BLE_STATUS_OK)
                     err = new CyApiErr("Failed to read descriptor. " + status.ToString());
                 Console.WriteLine("Value: {0}", GetIntegerValue(CyConnectResult.Value));
+                dvm.StackAddress = "" + GetIntegerValue(CyConnectResult.Value);
                 sync.Set();
             };
 
@@ -243,11 +244,11 @@ namespace BLE
                 switch(info.Handle){
                     case 0x0012:
                         notif_src = "Temperature";
-                        Temperature = "" + GetIntegerValue(info.Value);
+                        dvm.Temperature = "" + GetIntegerValue(info.Value);
                         break;
                     case 0x001A:
                         notif_src = "Pressure";
-                        Pressure = "" + GetIntegerValue(info.Value);
+                        dvm.Pressure = "" + GetIntegerValue(info.Value);
                         break;
                     default:
                         notif_src = "Handle "+info.Handle;
@@ -318,11 +319,15 @@ namespace BLE
             {
                return err;
             }
-
             Console.WriteLine("Connecting to peer device: [0x{0:X12},{1}] ...", PEER_DEVICE_BD_ADDR.Address, PEER_DEVICE_BD_ADDR.AddressType);
             err = this.ConnectToBleDevice(PEER_DEVICE_BD_ADDR);
 
             return err;
+        }
+
+        public void disconnect()
+        {
+            Dispose();
         }
 
         public CyApiErr turnOnTempNotifs() {
@@ -343,6 +348,30 @@ namespace BLE
         {
             Console.WriteLine("Turning off pressure notifications");
             return this.StopLogging(PRESSURE_CCCD_HANDLE);
+        }
+        public CyApiErr readAddress()
+        {
+            return this.Read(STACK_ADDRESS_HANDLE);
+        }
+        public CyApiErr updateSetpoint(int setpoint)
+        {
+            return this.Write(TEMPERATURE_HANDLE, BitConverter.GetBytes(setpoint));
+        }
+        public CyApiErr turnOnThermoController()
+        {
+            return this.Write(TEMP_CONTROLL_ONOFF_HANDLE, BitConverter.GetBytes(0x01));
+        }
+        public CyApiErr turnOffThermoController()
+        {
+            return this.Write(TEMP_CONTROLL_ONOFF_HANDLE, BitConverter.GetBytes(0x00));
+        }
+        public CyApiErr updateMotorSpeed(int speed)
+        {
+            return this.Write(MOTOR_SPEED_HANDLE, BitConverter.GetBytes(speed));
+        }
+        public CyApiErr hapticPreset(int preset)
+        {
+            return this.Write(HAPTIC_PRESET_HANDLE, BitConverter.GetBytes(preset));
         }
         /*
         static void Main(string[] args)
@@ -434,7 +463,7 @@ namespace BLE
             
         }
         */
-        
+
 
         #endregion
     }
