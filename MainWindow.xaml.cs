@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CySmart.DongleCommunicator.API;
 
 namespace BLE
 {
@@ -20,12 +21,16 @@ namespace BLE
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool connected = false;
+        private Dongle dongle;
 
 
 
         public MainWindow()
         {
             InitializeComponent();
+            dongle = new Dongle();
+            this.DataContext = dongle;
         }
 
         public void updateTemp(float temp)
@@ -44,22 +49,75 @@ namespace BLE
 
         private void tempNotifCheck_Checked(object sender, RoutedEventArgs e)
         {
-            Dongle.turnOnTempNotifs();
+            if (!connected) {
+                tempNotifCheck.IsChecked = false;
+                return;
+            }
+            
+            CyApiErr err = dongle.turnOnTempNotifs();
+            if (err.IsNotOk)
+            {
+                MessageBox.Show(err.Message);
+                tempNotifCheck.IsChecked = false;
+            }
         }
 
         private void tempNotifCheck_Unchecked(object sender, RoutedEventArgs e)
         {
-            Dongle.turnOffTempNotifs();
+            CyApiErr err = dongle.turnOffTempNotifs();
+            if (err.IsNotOk)
+            {
+                MessageBox.Show(err.Message);
+                tempNotifCheck.IsChecked = true;
+            }
         }
 
         private void pressureNotifCheck_Checked(object sender, RoutedEventArgs e)
         {
-            Dongle.turnOnPressureNotifs();
+            if (!connected)
+            {
+                pressureNotifCheck.IsChecked = false;
+                return;
+            }
+            CyApiErr err = dongle.turnOnPressureNotifs();
+            if (err.IsNotOk)
+            {
+                MessageBox.Show(err.Message);
+                pressureNotifCheck.IsChecked = false;
+            }
         }
 
         private void pressureNotifCheck_Unchecked(object sender, RoutedEventArgs e)
         {
-            Dongle.turnOffPressureNotifs();
+            CyApiErr err = dongle.turnOffPressureNotifs();
+            if (err.IsNotOk)
+            {
+                MessageBox.Show(err.Message);
+                pressureNotifCheck.IsChecked = true;
+            }
+        }
+
+        private void connectBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (!connected)
+            {
+                string com = portNameBox.Text;
+                
+                CyApiErr err = dongle.connect(com);
+                if (err.IsOk)
+                {
+                    connectBtn.Content = "Disconnect";
+                    connected = true;
+                } else
+                {
+                    MessageBox.Show(err.Message);
+                }
+            } else
+            {
+                //disconnect
+                connectBtn.Content = "Connect";
+                connected = false;
+            }
         }
     }
 }

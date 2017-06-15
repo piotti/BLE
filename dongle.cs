@@ -6,15 +6,20 @@ using CySmart.DongleCommunicator.API;
 using CySmart.Common.Base.Compatibility.Net20;
 using System.Threading;
 
-namespace ApiExamples.NotificationLogger
+namespace BLE
 {
     #region NotificationLogger
 
     /// <summary>
     /// Simple class which logs all received notifications to Console
     /// </summary>
-    class NotificationLogger : IDisposable
+    class Dongle : IDisposable
     {
+
+        public string Temperature { get; set; }
+        public string Pressure { get; set; }
+
+
         #region Setup Constants
 
         // Change the COM port name to the COM port of your CySmart dongle
@@ -86,13 +91,16 @@ namespace ApiExamples.NotificationLogger
 
         #region ctor
 
-        public NotificationLogger()
+        public Dongle()
         {
             m_communicator = null;
             m_deviceCb = null;
             m_bleMgrCb = null;
             m_peerDevice = null;
             m_gattClientCb = null;
+
+            Temperature = "";
+            Pressure = "";
         }
 
         #endregion
@@ -235,9 +243,11 @@ namespace ApiExamples.NotificationLogger
                 switch(info.Handle){
                     case 0x0012:
                         notif_src = "Temperature";
+                        Temperature = "" + GetIntegerValue(info.Value);
                         break;
                     case 0x001A:
                         notif_src = "Pressure";
+                        Pressure = "" + GetIntegerValue(info.Value);
                         break;
                     default:
                         notif_src = "Handle "+info.Handle;
@@ -302,6 +312,39 @@ namespace ApiExamples.NotificationLogger
 
         #region Main
 
+        public CyApiErr connect(string com) {
+            CyApiErr err = this.ConnectToDongle(new CyDongleInfo(com, CyDongleInfo.CySmartDongleType.CY5670));
+            if (err.IsNotOK)
+            {
+               return err;
+            }
+
+            Console.WriteLine("Connecting to peer device: [0x{0:X12},{1}] ...", PEER_DEVICE_BD_ADDR.Address, PEER_DEVICE_BD_ADDR.AddressType);
+            err = this.ConnectToBleDevice(PEER_DEVICE_BD_ADDR);
+
+            return err;
+        }
+
+        public CyApiErr turnOnTempNotifs() {
+            Console.WriteLine("Turning on temp notifications");
+            return this.StartLogging(TEMPERATURE_CCCD_HANDLE);
+        }
+        public CyApiErr turnOffTempNotifs()
+        {
+            Console.WriteLine("Turning off temp notifications");
+            return this.StopLogging(TEMPERATURE_CCCD_HANDLE);
+        }
+        public CyApiErr turnOnPressureNotifs()
+        {
+            Console.WriteLine("Turning on pressure notifications");
+            return this.StartLogging(PRESSURE_CCCD_HANDLE);
+        }
+        public CyApiErr turnOffPressureNotifs()
+        {
+            Console.WriteLine("Turning off pressure notifications");
+            return this.StopLogging(PRESSURE_CCCD_HANDLE);
+        }
+        /*
         static void Main(string[] args)
         {
             using (NotificationLogger logger = new NotificationLogger())
@@ -388,7 +431,10 @@ namespace ApiExamples.NotificationLogger
                 }              
 
             }
+            
         }
+        */
+        
 
         #endregion
     }

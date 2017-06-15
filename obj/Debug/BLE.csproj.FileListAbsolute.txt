@@ -12,3 +12,6 @@ c:\users\piotti\documents\visual studio 2017\Projects\BLE\BLE\obj\Debug\BLE.cspr
 c:\users\piotti\documents\visual studio 2017\Projects\BLE\BLE\obj\Debug\BLE.exe
 c:\users\piotti\documents\visual studio 2017\Projects\BLE\BLE\obj\Debug\BLE.pdb
 c:\users\piotti\documents\visual studio 2017\Projects\BLE\BLE\obj\Debug\BLE.csprojResolveAssemblyReference.cache
+C:\Users\piotti\Documents\Visual Studio 2017\Projects\BLE\BLE\bin\Debug\cybleautobase.dll
+C:\Users\piotti\Documents\Visual Studio 2017\Projects\BLE\BLE\bin\Debug\cyblecommonbase.dll
+C:\Users\piotti\Documents\Visual Studio 2017\Projects\BLE\BLE\bin\Debug\cybledonglecommunicator.dll

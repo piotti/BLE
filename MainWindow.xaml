@@ -8,14 +8,17 @@
         Title="MainWindow" Height="350" Width="525">
     <Grid>
         <TextBlock HorizontalAlignment="Left" Margin="26,22,0,0" TextWrapping="Wrap" Text="Temperature" VerticalAlignment="Top" FontSize="18"/>
-        <TextBlock x:Name="tempBox" HorizontalAlignment="Left" Margin="48,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBlock x:Name="tempBox" Text="{Binding Temperature}" HorizontalAlignment="Left" Margin="48,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <CheckBox x:Name="tempNotifCheck" Content="Receive Temperature Notifications" HorizontalAlignment="Left" Margin="26,73,0,0" VerticalAlignment="Top" Checked="tempNotifCheck_Checked" Unchecked="tempNotifCheck_Unchecked"/>
-        <TextBlock x:Name="pressureBox" HorizontalAlignment="Left" Margin="308,22,0,0" TextWrapping="Wrap" Text="Pressure" VerticalAlignment="Top" FontSize="18"/>
-        <TextBlock HorizontalAlignment="Left" Margin="374,46,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="308,22,0,0" TextWrapping="Wrap" Text="Pressure" VerticalAlignment="Top" FontSize="18"/>
+        <TextBlock x:Name="pressureBox" Text="{Binding Pressure}" HorizontalAlignment="Left" Margin="374,46,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <CheckBox x:Name="pressureNotifCheck" Content="Receive Pressure Notifications" Margin="308,73,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Checked="pressureNotifCheck_Checked" Unchecked="pressureNotifCheck_Unchecked"/>
         <Slider x:Name="motorSlider" HorizontalAlignment="Left" Margin="48,145,0,0" VerticalAlignment="Top" Orientation="Vertical" RenderTransformOrigin="-0.136,0.7" Height="125"/>
         <TextBlock HorizontalAlignment="Left" Margin="26,124,0,0" TextWrapping="Wrap" Text="Motor Speed" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="161,0,0,0" TextWrapping="Wrap" Text="Stack Address:" VerticalAlignment="Top"/>
         <TextBlock x:Name="addrBox" HorizontalAlignment="Left" Margin="260,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="0"/><LineBreak/><Run/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="228,145,0,0" TextWrapping="Wrap" Text="Port Name:" VerticalAlignment="Top"/>
+        <TextBox x:Name="portNameBox" HorizontalAlignment="Left" Height="23" Margin="294,142,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="81"/>
+        <Button x:Name="connectBtn" Content="Connect" HorizontalAlignment="Left" Margin="390,146,0,0" VerticalAlignment="Top" Width="75" Click="connectBtn_Click"/>
     </Grid>
 </Window>
