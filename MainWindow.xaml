@@ -32,5 +32,6 @@
         <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,180,0,0" TextWrapping="Wrap" Text="Haptic Preset:" VerticalAlignment="Top" RenderTransformOrigin="0.521,0.021"/>
         <TextBox x:Name="hapticPresetBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="88,177,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="53"/>
         <Button x:Name="hapticPresetSendBox" Content="Send" Grid.Column="1" HorizontalAlignment="Left" Margin="146,177,0,0" VerticalAlignment="Top" Width="75" Click="hapticPresetSendBox_Click"/>
+        <CheckBox x:Name="record" Content="Record Temperature Data" Grid.Column="1" HorizontalAlignment="Left" Margin="50,249,0,0" VerticalAlignment="Top" Checked="record_Checked" Unchecked="record_Unchecked"/>
     </Grid>
 </Window>

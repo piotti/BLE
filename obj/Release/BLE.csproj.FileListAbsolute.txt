@@ -20,6 +20,7 @@ C:\Users\user1\Desktop\BLE\bin\Release\BLE.pdb
 C:\Users\user1\Desktop\BLE\bin\Release\cybleautobase.dll
 C:\Users\user1\Desktop\BLE\bin\Release\cyblecommonbase.dll
 C:\Users\user1\Desktop\BLE\bin\Release\cybledonglecommunicator.dll
+C:\Users\user1\Desktop\BLE\obj\Release\BLE.csprojResolveAssemblyReference.cache
 C:\Users\user1\Desktop\BLE\obj\Release\MainWindow.g.cs
 C:\Users\user1\Desktop\BLE\obj\Release\App.g.cs
 C:\Users\user1\Desktop\BLE\obj\Release\BLE_MarkupCompile.cache

@@ -210,5 +210,31 @@ namespace BLE
                 MessageBox.Show(err.Message);
 
         }
+
+        
+        private void record_Checked(object sender, RoutedEventArgs e)
+        {
+            dvm.startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            dvm.temps.Clear();
+            dvm.setpoints.Clear();
+            dvm.times.Clear();
+            dvm.recording = true;
+        }
+        
+            
+
+        private void record_Unchecked(object sender, RoutedEventArgs e)
+        {
+            dvm.recording = false;
+            System.IO.StreamWriter file = new System.IO.StreamWriter("data.txt");
+            for(int i = 0; i < dvm.times.Count; i++)
+            {
+                file.WriteLine(String.Format("{0},{1},{2}", dvm.times[i], dvm.temps[i], dvm.setpoints[i]));
+            }
+
+            file.Close();
+            System.Diagnostics.Process.Start(@"graph.py");
+
+        }
     }
 }

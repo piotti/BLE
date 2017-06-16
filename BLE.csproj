@@ -39,7 +39,8 @@
     <Reference Include="cyblecommonbase">
       <HintPath>.\cyblecommonbase.dll</HintPath>
     </Reference>
-    <Reference Include="cybledonglecommunicator">
+    <Reference Include="cybledonglecommunicator, Version=1.2.0.122, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>.\cybledonglecommunicator.dll</HintPath>
     </Reference>
     <Reference Include="System" />

@@ -20,7 +20,12 @@ namespace BLE
 
         }
 
-
+        public bool recording;
+        public List<double> temps = new List<double>();
+        public List<double> setpoints = new List<double>();
+        public List<double> times = new List<double>();
+        public long startTime;
+        private int setpoint = 0;
 
         private Dongle dongle;
         private string _temperature;
@@ -29,6 +34,12 @@ namespace BLE
             get { return _temperature; }
             set
             {
+                if (recording)
+                {
+                    temps.Add(Double.Parse(value));
+                    times.Add(DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond - startTime);
+                    setpoints.Add(setpoint);
+                }
                 _temperature = value + " deg C";
                 NotifyPropertyChanged("Temperature");
             }
@@ -95,7 +106,11 @@ namespace BLE
         }
         public CyApiErr updateSetpoint(int setpoint)
         {
-            return dongle.updateSetpoint(setpoint);
+            
+            CyApiErr err =  dongle.updateSetpoint(setpoint);
+            if (err.IsOk)
+                this.setpoint = setpoint;
+            return err;
         }
         public CyApiErr turnOnThermoController()
         {
