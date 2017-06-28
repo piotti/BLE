@@ -15,7 +15,7 @@ namespace BLE
     /// </summary>
     class Dongle : IDisposable
     {
-
+        private Dictionary<string, CyBleBdAddress> bluetooth_address;
 
         #region Setup Constants
 
@@ -23,18 +23,24 @@ namespace BLE
         const string COM_PORT_NAME = "COM11";
 
         // Bluetooth address of the peer device you want to connect to
-        static readonly CyBleBdAddress PEER_DEVICE_BD_ADDR = 
-            new CyBleBdAddress(0x00A050A47A8D, CyBleBdAddressType.PUBLIC_ADDRESS);
+        static readonly CyBleBdAddress PEER_DEVICE_BD_ADDR_00795 = new CyBleBdAddress(0x00A050A47A8D, CyBleBdAddressType.PUBLIC_ADDRESS);
+        static readonly CyBleBdAddress PEER_DEVICE_BD_ADDR_00392 = new CyBleBdAddress(0x00A050E17C5F, CyBleBdAddressType.PUBLIC_ADDRESS);
 
         // CCCD attribute handle of the characteristic whose notification needs to be monitored
         const ushort TEMPERATURE_HANDLE = 0x0012; //temp & setpoint
         const ushort TEMPERATURE_CCCD_HANDLE = 0x0013; //notifs
-        const ushort PRESSURE_CCCD_HANDLE = 0x001B; //notifs
+        const ushort PRESSURE_CCCD_HANDLE = 0x0028; //notifs
+        const ushort PRESSURE_HANDLE = 0x0027;
         const ushort TEMP_CONTROLL_ONOFF_HANDLE = 0x0016; //write
-        const ushort HAPTIC_PRESET_HANDLE = 0x001F; //write
-        const ushort HAPTIC_BUZZ_HANDLE = 0x0022; //write
-        const ushort MOTOR_SPEED_HANDLE = 0x0026; //write
-        const ushort STACK_ADDRESS_HANDLE = 0x002A; //read
+        const ushort HAPTIC_PRESET_HANDLE = 0x002C; //write
+        const ushort HAPTIC_BUZZ_HANDLE = 0x002F; //write
+        const ushort MOTOR_SPEED_HANDLE = 0x0033; //write
+        const ushort STACK_ADDRESS_HANDLE = 0x0037; //read
+        const ushort KP_HANDLE = 0x0019;
+        const ushort KI_HANDLE = 0x001C;
+        const ushort KD_HANDLE = 0x001F;
+        const ushort OUTPUT_HANDLE = 0x0022;
+        const ushort OUTPUT_CCCD_HANDLE = 0x0024;
 
         #endregion
 
@@ -99,7 +105,11 @@ namespace BLE
             m_peerDevice = null;
             m_gattClientCb = null;
 
-            this.dvm = dvm; 
+            this.dvm = dvm;
+
+            bluetooth_address = new Dictionary<string, CyBleBdAddress>();
+            bluetooth_address.Add("00795", PEER_DEVICE_BD_ADDR_00795);
+            bluetooth_address.Add("00392", PEER_DEVICE_BD_ADDR_00392);
         }
 
         #endregion
@@ -239,16 +249,20 @@ namespace BLE
         {
             // Setup the characteristic changed handler
             m_gattClientCb.CharacteristicChangedHandler = (info) =>
-            {   
+            {
                 string notif_src;
                 switch(info.Handle){
-                    case 0x0012:
+                    case TEMPERATURE_HANDLE:
                         notif_src = "Temperature";
                         dvm.Temperature = "" + GetIntegerValue(info.Value);
                         break;
-                    case 0x001A:
+                    case PRESSURE_HANDLE:
                         notif_src = "Pressure";
                         dvm.Pressure = "" + GetIntegerValue(info.Value);
+                        break;
+                    case OUTPUT_HANDLE:
+                        notif_src = "Output";
+                        dvm.Output = GetIntegerValue(info.Value);
                         break;
                     default:
                         notif_src = "Handle "+info.Handle;
@@ -301,7 +315,10 @@ namespace BLE
         {
             if(m_communicator != null)
             {
-                CyApiErr err = CySmartDongleMgr.GetInstance().CloseCommunicator(m_communicator);
+                CyApiErr err = BleMgr.Disconnect(m_peerDevice);
+                if (err.IsNotOK)
+                    Console.WriteLine(err.Message);
+                err = CySmartDongleMgr.GetInstance().CloseCommunicator(m_communicator);
                 if (err.IsNotOK)
                     Console.WriteLine(err.Message);
 
@@ -313,14 +330,18 @@ namespace BLE
 
         #region Main
 
-        public CyApiErr connect(string com) {
+        public CyApiErr connect(string com, string psocName) {
             CyApiErr err = this.ConnectToDongle(new CyDongleInfo(com, CyDongleInfo.CySmartDongleType.CY5670));
             if (err.IsNotOK)
             {
                return err;
             }
-            Console.WriteLine("Connecting to peer device: [0x{0:X12},{1}] ...", PEER_DEVICE_BD_ADDR.Address, PEER_DEVICE_BD_ADDR.AddressType);
-            err = this.ConnectToBleDevice(PEER_DEVICE_BD_ADDR);
+            CyBleBdAddress address;
+            bluetooth_address.TryGetValue(psocName, out address);
+
+            //PEER_DEVICE_BD_ADDR = new CyBleBdAddress(address, CyBleBdAddressType.PUBLIC_ADDRESS);
+            Console.WriteLine("Connecting to peer device: [0x{0:X12},{1}] ...", address.Address, address.AddressType);
+            err = this.ConnectToBleDevice(address);
 
             return err;
         }
@@ -373,99 +394,55 @@ namespace BLE
         {
             return this.Write(HAPTIC_PRESET_HANDLE, BitConverter.GetBytes(preset));
         }
-        /*
-        static void Main(string[] args)
-        {
-            using (NotificationLogger logger = new NotificationLogger())
-            {
-                Console.WriteLine("Connecting to the dongle at {0} ...", COM_PORT_NAME);
-
-                // Change the dongle type to match with the dongle you need to connect
-                CyApiErr err = logger.ConnectToDongle(new CyDongleInfo(COM_PORT_NAME, CyDongleInfo.CySmartDongleType.CY5670));
-                if (err.IsNotOK)
-                {
-                    Console.WriteLine(err.Message);
-                    return;
-                }
-
-                Console.WriteLine("Connecting to peer device: [0x{0:X12},{1}] ...", PEER_DEVICE_BD_ADDR.Address, PEER_DEVICE_BD_ADDR.AddressType);
-                err = logger.ConnectToBleDevice(PEER_DEVICE_BD_ADDR);
-                if (err.IsNotOK)
-                {
-                    Console.WriteLine(err.Message);
-                    return;
-                }
-
-                Console.WriteLine("type a command");
-                while(true) {
-                    string command = Console.ReadLine();
-                    string[] parts = command.Split();
-                    switch(parts[0]){
-                        case "T": //Temp notifs ON
-                            Console.WriteLine("Turning on temp notifications");
-                            err = logger.StartLogging(TEMPERATURE_CCCD_HANDLE);
-                            break;
-                        case "t": //Temp notifs OFF
-                            Console.WriteLine("Turning off temp notifications");
-                            err = logger.StopLogging(TEMPERATURE_CCCD_HANDLE);
-                            break;
-                        case "P": //Pressure notifs ON
-                            Console.WriteLine("Turning on pressure notifications");
-                            err = logger.StartLogging(PRESSURE_CCCD_HANDLE);
-                            break;
-                        case "p": //Pressure notifs OFF
-                            Console.WriteLine("Turning off pressure notifications");
-                            err = logger.StopLogging(PRESSURE_CCCD_HANDLE);
-                            break;
-                        case "O": //Temp controller ON
-                            Console.WriteLine("Turning on temperature controller");
-                            err = logger.Write(TEMP_CONTROLL_ONOFF_HANDLE, BitConverter.GetBytes(0x01));
-                            break;
-                        case "o": //Temp controller OFF
-                            Console.WriteLine("Turning off temperature controller");
-                            err = logger.Write(TEMP_CONTROLL_ONOFF_HANDLE, BitConverter.GetBytes(0x00));
-                            break;
-                        case "a": //Read stack address
-                            Console.WriteLine("Reading stack address...");
-                            err = logger.Read(STACK_ADDRESS_HANDLE);
-                            break;
-                        case "hp": //Write Haptic Preset
-                            int val  = Int32.Parse(parts[1]);
-                            Console.WriteLine("Writing {0} to Haptic Preset", val);
-                            logger.Write(HAPTIC_PRESET_HANDLE, BitConverter.GetBytes(val));
-                            break;
-                        case "hb": //Write Haptic Buzz
-                            val  = Int32.Parse(parts[1]);
-                            Console.WriteLine("Writing {0} to Haptic Buzz", val);
-                            logger.Write(HAPTIC_BUZZ_HANDLE, BitConverter.GetBytes(val));
-                            break;
-                        case "m":
-                            val  = Int32.Parse(parts[1]);
-                            Console.WriteLine("Writing {0} to Motor Speed", val);
-                            logger.Write(MOTOR_SPEED_HANDLE, BitConverter.GetBytes(val));
-                            break;
-                        case "e":
-                            logger.Dispose();
-                            return;
-                        default:
-                            Console.WriteLine("unknown command");
-                            break;
-                        
-                    } 
-                    if (err.IsNotOK) {
-                            Console.WriteLine(err.Message);
-                            logger.Dispose();
-                            return;
-                        } 
-                }              
-
-            }
-            
-        }
-        */
-
-
         #endregion
+
+        public CyApiErr sendCommand(string command)
+        {
+            string[] parts = command.Split();
+            CyApiErr err = CyApiErr.Ok;
+            switch (parts[0])
+            {
+                case "hp": //Write Haptic Preset
+                    int val = Int32.Parse(parts[1]);
+                    err = this.hapticPreset(val);
+                    break;
+                case "hb": //Write Haptic Buzz
+                    val = Int32.Parse(parts[1]);
+                    Console.WriteLine("Writing {0} to Haptic Buzz", val);
+                    err = this.Write(HAPTIC_BUZZ_HANDLE, BitConverter.GetBytes(val));
+                    break;
+                case "kp":
+                    Double valD = Double.Parse(parts[1]);
+                    byte[] bs = { (byte) Math.Floor(valD), (byte) Math.Round((valD - Math.Floor(valD)) * 100) };
+                    Console.WriteLine("Writing [{0}, {1}] to Kp", bs[0], bs[1]);
+                    err = this.Write(KP_HANDLE, bs);
+                    break;
+                case "ki":
+                    valD = Double.Parse(parts[1]);
+                    bs = new byte[] { (byte)Math.Floor(valD), (byte)Math.Round((valD - Math.Floor(valD)) * 100) };
+                    Console.WriteLine("Writing [{0}, {1}] to Kp", bs[0], bs[1]);
+                    err = this.Write(KI_HANDLE, bs);
+                    break;
+                case "kd":
+                    valD = Double.Parse(parts[1]);
+                    bs = new byte[] { (byte)Math.Floor(valD), (byte)Math.Round((valD - Math.Floor(valD)) * 100) };
+                    Console.WriteLine("Writing [{0}, {1}] to Kp", bs[0], bs[1]);
+                    err = this.Write(KD_HANDLE, bs);
+                    break;
+                case "O":
+                    Console.WriteLine("Turning on output notifications");
+                    err = Write(OUTPUT_CCCD_HANDLE, BitConverter.GetBytes(0x0100)); //this.StartLogging(OUTPUT_CCCD_HANDLE);
+                    break;
+                case "o":
+                    Console.WriteLine("Turning off output notifications");
+                    err = this.StopLogging(OUTPUT_CCCD_HANDLE);
+                    break;
+                default:
+                    Console.WriteLine("unknown command");
+                    break;
+            }
+            return err;
+        }
     }
 
     #endregion

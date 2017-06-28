@@ -1,0 +1,18 @@
+things to do:
+
++ record temp data, add first and last data points - done
++ figure out setpoint discrepancy - Error in PSoC bit shifting - fixed
++ "deg" to degree sign - done
++ setpoint is 0 when thermo-controller off - done
++ incorporate PID tunings - Set PID tunings through GUI "Command Prompt" window
+- see PID output - ouput is read through BLE but not shown in GUI a.t.m.
++ disable dongle port and psoc select when connected - done
++ PID stops when GATT disconnect - added call to stop for GATT disconnect event
++ auto disconnect when window closes - added window closed event which triggers disconnnet
++ PSoC restart advertisement always - set restart advertisement flag to "True" for timeouts
+
+- ITerm cleared with new setpoint
++Thermocouple noise at high temps? (Reading -271.08 deg C) 4.7 uF capacitor to filter out 60Hz AC noise
+
++ PSoC PCB 4 SSR leaking current? - Wrong SSR, 1727J only for DC. Replaced with 1927J
+

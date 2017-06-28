@@ -14,3 +14,4 @@ C:\Users\user1\Desktop\BLE\obj\Debug\BLE.Properties.Resources.resources
 C:\Users\user1\Desktop\BLE\obj\Debug\BLE.csproj.GenerateResource.Cache
 C:\Users\user1\Desktop\BLE\obj\Debug\BLE.exe
 C:\Users\user1\Desktop\BLE\obj\Debug\BLE.pdb
+C:\Users\user1\Desktop\BLE\bin\Debug\BLE.pdb

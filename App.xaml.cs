@@ -13,7 +13,6 @@ namespace BLE
     /// </summary>
     public partial class App : Application
     {
-        
 
     }
 }

@@ -28,10 +28,11 @@ namespace BLE
 
         public MainWindow()
         {
-            InitializeComponent();
+            
             dvm = new DongleViewModel();
             this.DataContext = dvm;
 
+            InitializeComponent();
 
         }
 
@@ -51,10 +52,6 @@ namespace BLE
 
         private void tempNotifCheck_Checked(object sender, RoutedEventArgs e)
         {
-            if (!connected) {
-                tempNotifCheck.IsChecked = false;
-                return;
-            }
             
             CyApiErr err = dvm.turnOnTempNotifs();
             if (err.IsNotOk)
@@ -76,11 +73,6 @@ namespace BLE
 
         private void pressureNotifCheck_Checked(object sender, RoutedEventArgs e)
         {
-            if (!connected)
-            {
-                pressureNotifCheck.IsChecked = false;
-                return;
-            }
             CyApiErr err = dvm.turnOnPressureNotifs();
             if (err.IsNotOk)
             {
@@ -104,12 +96,27 @@ namespace BLE
             if (!connected)
             {
                 string com = portNameBox.Text;
-                
-                CyApiErr err = dvm.connect(com);
+                string psocName = ((ComboBoxItem)psocComboBox.SelectedItem).Content.ToString();
+                CyApiErr err = dvm.connect(com, psocName);
                 if (err.IsOk)
                 {
                     connectBtn.Content = "Disconnect";
                     connected = true;
+                    tempNotifCheck.IsEnabled = true;
+                    pressureNotifCheck.IsEnabled = true;
+                    readAddrBtn.IsEnabled = true;
+                    thermoControllerCheck.IsEnabled = true;
+                    hapticPresetSendBox.IsEnabled = true;
+                    motorSlider.IsEnabled = true;
+                    setpointSlider.IsEnabled = true;
+                    record.IsEnabled = true;
+                    commandInput.IsEnabled = true;
+                    commandSend.IsEnabled = true;
+
+                    portNameBox.IsEnabled = false;
+                    psocComboBox.IsEnabled = false;
+
+
                 } else
                 {
                     MessageBox.Show(err.Message);
@@ -148,7 +155,7 @@ namespace BLE
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int temp = (int)((20 + e.NewValue * 28) / 5) * 5;
-            setpointBox.Text = "Setpoint: " + temp + " deg C";
+            setpointBox.Text = "Setpoint: " + temp + " ° C";
             if (!dragStarted)
             {
                 CyApiErr err = dvm.updateSetpoint(temp);
@@ -218,6 +225,8 @@ namespace BLE
             dvm.temps.Clear();
             dvm.setpoints.Clear();
             dvm.times.Clear();
+            dvm.outs.Clear();
+            dvm.addDataPoint();
             dvm.recording = true;
         }
         
@@ -226,15 +235,37 @@ namespace BLE
         private void record_Unchecked(object sender, RoutedEventArgs e)
         {
             dvm.recording = false;
+            dvm.addDataPoint();
             System.IO.StreamWriter file = new System.IO.StreamWriter("data.txt");
             for(int i = 0; i < dvm.times.Count; i++)
             {
-                file.WriteLine(String.Format("{0},{1},{2}", dvm.times[i], dvm.temps[i], dvm.setpoints[i]));
+                file.WriteLine(String.Format("{0},{1},{2},{3}", dvm.times[i], dvm.temps[i], dvm.setpoints[i], dvm.outs[i]));
             }
 
             file.Close();
             System.Diagnostics.Process.Start(@"graph.py");
 
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (connected)
+                dvm.disconnect();
+        }
+
+        private void inputKeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                dvm.sendCommand(commandInput.Text);
+                commandInput.Text = "";
+            }
+        }
+
+        private void commandSend_Click(object sender, RoutedEventArgs e)
+        {
+            dvm.sendCommand(commandInput.Text);
+            commandInput.Text = "";
         }
     }
 }

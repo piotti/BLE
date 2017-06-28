@@ -24,26 +24,52 @@ namespace BLE
         public List<double> temps = new List<double>();
         public List<double> setpoints = new List<double>();
         public List<double> times = new List<double>();
+        public List<int> outs = new List<int>();
         public long startTime;
         private int setpoint = 0;
 
+        private bool controller_on = false;
+
+
+
         private Dongle dongle;
+        private double lastTemp = 0;
+        public void addDataPoint()
+        {
+            temps.Add(lastTemp);
+            times.Add(DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond - startTime);
+            setpoints.Add(controller_on ? setpoint : 0);
+            outs.Add(Output);
+        }
+        
         private string _temperature;
         public string Temperature
         {
             get { return _temperature; }
             set
             {
+                if(lastTemp != 0)
+                    addDataPoint();
+                if(value != "")
+                    lastTemp = Double.Parse(value) / 100;
                 if (recording)
                 {
-                    temps.Add(Double.Parse(value));
-                    times.Add(DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond - startTime);
-                    setpoints.Add(setpoint);
+                    addDataPoint();
                 }
-                _temperature = value + " deg C";
+                if(value != "")
+                {
+                    _temperature = String.Format("{0:0.00}°C", lastTemp);
+                }
+                else
+                {
+                    _temperature = "°C";
+                }
+                
                 NotifyPropertyChanged("Temperature");
             }
         }
+
+        public int Output=0;
 
         private string _pressure;
         public string Pressure
@@ -92,9 +118,9 @@ namespace BLE
         {
             return dongle.turnOffPressureNotifs();
         }
-        public CyApiErr connect(string com)
+        public CyApiErr connect(string com, string psocName)
         {
-            return dongle.connect(com);
+            return dongle.connect(com, psocName);
         }
         public void disconnect()
         {
@@ -114,10 +140,12 @@ namespace BLE
         }
         public CyApiErr turnOnThermoController()
         {
+            controller_on = true;
             return dongle.turnOnThermoController();
         }
         public CyApiErr turnOffThermoController()
         {
+            controller_on = false;
             return dongle.turnOffThermoController();
         }
         public CyApiErr updateMotorSpeed(int speed)
@@ -127,6 +155,10 @@ namespace BLE
         public CyApiErr hapticPreset(int preset)
         {
             return dongle.hapticPreset(preset);
+        }
+        public CyApiErr sendCommand(string command)
+        {
+            return dongle.sendCommand(command);
         }
     }
 }
