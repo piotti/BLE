@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CySmart.DongleCommunicator.API;
 using System.Windows.Controls.Primitives;
+using Npgsql;
 
 namespace BLE
 {
@@ -24,6 +25,7 @@ namespace BLE
     {
         private bool connected = false;
         private DongleViewModel dvm;
+        
 
 
         public MainWindow()
@@ -32,6 +34,8 @@ namespace BLE
             dvm = new DongleViewModel();
             this.DataContext = dvm;
 
+            
+
             InitializeComponent();
 
         }
@@ -39,10 +43,12 @@ namespace BLE
         public void updateTemp(float temp)
         {
             tempBox.Text = "" + temp;
+            
         }
         public void updatePressure(float pressure)
         {
             pressureBox.Text = "" + pressure;
+           
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

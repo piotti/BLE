@@ -1,4 +1,5 @@
 ﻿using CySmart.DongleCommunicator.API;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,8 +12,14 @@ namespace BLE
     class DongleViewModel : INotifyPropertyChanged
     {
 
+        private NpgsqlConnection conn;
+
         public DongleViewModel()
         {
+            conn = new NpgsqlConnection("Host = localhost; Username = postgres; Password = JensenRobot321; Database = robot_info");
+            conn.Open();
+
+            
             Temperature = "";
             Pressure = "";
             StackAddress = "";
@@ -42,6 +49,22 @@ namespace BLE
             outs.Add(Output);
         }
         
+
+        private void updateDatabase(string field, string val)
+        {
+            try
+            {
+                var cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = String.Format("UPDATE real_time SET {0}={1} WHERE info_id=1", field, val);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Npgsql.PostgresException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
         private string _temperature;
         public string Temperature
         {
@@ -64,7 +87,7 @@ namespace BLE
                 {
                     _temperature = "°C";
                 }
-                
+                updateDatabase("temp_1", String.Format("{0:00}", lastTemp));
                 NotifyPropertyChanged("Temperature");
             }
         }
@@ -72,12 +95,16 @@ namespace BLE
         public int Output=0;
 
         private string _pressure;
+        private int lastPressure = 0;
         public string Pressure
         {
             get { return _pressure; }
             set
             {
+                if (value != "")
+                    lastPressure = Int16.Parse(value);
                 _pressure = value + " psi";
+                updateDatabase("pres_1", value);
                 NotifyPropertyChanged("Pressure");
             }
         }
@@ -124,6 +151,7 @@ namespace BLE
         }
         public void disconnect()
         {
+            conn.Close();
             dongle.disconnect();
         }
         public CyApiErr readAddress()

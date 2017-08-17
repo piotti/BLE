@@ -32,3 +32,7 @@ C:\Users\user1\Desktop\BLE\obj\Release\BLE.Properties.Resources.resources
 C:\Users\user1\Desktop\BLE\obj\Release\BLE.csproj.GenerateResource.Cache
 C:\Users\user1\Desktop\BLE\obj\Release\BLE.exe
 C:\Users\user1\Desktop\BLE\obj\Release\BLE.pdb
+C:\Users\user1\Desktop\BLE\bin\Release\Npgsql.dll
+C:\Users\user1\Desktop\BLE\bin\Release\System.Threading.Tasks.Extensions.dll
+C:\Users\user1\Desktop\BLE\bin\Release\Npgsql.xml
+C:\Users\user1\Desktop\BLE\bin\Release\System.Threading.Tasks.Extensions.xml
