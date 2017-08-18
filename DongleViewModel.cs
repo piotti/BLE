@@ -14,8 +14,17 @@ namespace BLE
 
         private NpgsqlConnection conn;
 
+        private Dictionary<string, string> database_psoc_names;
+        private string db_handle;
+
         public DongleViewModel()
         {
+
+            database_psoc_names = new Dictionary<string, string>();
+            database_psoc_names.Add("00795", "1");
+            database_psoc_names.Add("00392", "2");
+           
+
             conn = new NpgsqlConnection("Host = localhost; Username = postgres; Password = JensenRobot321; Database = robot_info");
             conn.Open();
 
@@ -87,7 +96,7 @@ namespace BLE
                 {
                     _temperature = "°C";
                 }
-                updateDatabase("temp_1", String.Format("{0:00}", lastTemp));
+                updateDatabase("temp_" + db_handle, String.Format("{0:00}", lastTemp));
                 NotifyPropertyChanged("Temperature");
             }
         }
@@ -104,7 +113,7 @@ namespace BLE
                 if (value != "")
                     lastPressure = Int16.Parse(value);
                 _pressure = value + " psi";
-                updateDatabase("pres_1", value);
+                updateDatabase("pres_" + db_handle, value);
                 NotifyPropertyChanged("Pressure");
             }
         }
@@ -147,6 +156,7 @@ namespace BLE
         }
         public CyApiErr connect(string com, string psocName)
         {
+            database_psoc_names.TryGetValue(psocName, out db_handle);
             return dongle.connect(com, psocName);
         }
         public void disconnect()
