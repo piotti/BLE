@@ -6,11 +6,15 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
+using System.Diagnostics;
 
 namespace BLE
 {
     class DongleViewModel : INotifyPropertyChanged
     {
+
+        private bool connected = false;
 
         private NpgsqlConnection conn;
 
@@ -34,7 +38,11 @@ namespace BLE
             StackAddress = "";
             dongle = new Dongle(this);
 
+            
+
         }
+
+       
 
         public bool recording;
         public List<double> temps = new List<double>();
@@ -157,7 +165,9 @@ namespace BLE
         public CyApiErr connect(string com, string psocName)
         {
             database_psoc_names.TryGetValue(psocName, out db_handle);
-            return dongle.connect(com, psocName);
+            CyApiErr err =  dongle.connect(com, psocName);
+            connected = err.IsOk;
+            return err;
         }
         public void disconnect()
         {

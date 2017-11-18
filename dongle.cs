@@ -334,7 +334,7 @@ namespace BLE
             CyApiErr err = this.ConnectToDongle(new CyDongleInfo(com, CyDongleInfo.CySmartDongleType.CY5670));
             if (err.IsNotOK)
             {
-               return err;
+               //return err;
             }
             CyBleBdAddress address;
             bluetooth_address.TryGetValue(psocName, out address);

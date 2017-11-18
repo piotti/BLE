@@ -5,43 +5,45 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BLE"
         mc:Ignorable="d"
-        Title="Reactor BLE Connection" Height="425" Width="525"
+        Title="Reactor BLE Connection 1.2" Height="425" Width="525"
         Closing="Window_Closing"
         >
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="256*"/>
+            <ColumnDefinition Width="57*"/>
+            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="149*"/>
             <ColumnDefinition Width="261*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock HorizontalAlignment="Left" Margin="26,60,0,0" TextWrapping="Wrap" Text="Temperature" VerticalAlignment="Top" FontSize="18" RenderTransformOrigin="0.502,0.89" Height="24" Width="102"/>
-        <TextBlock x:Name="tempBox" HorizontalAlignment="Left" Margin="33,84,0,0" Text="{Binding Path=Temperature, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" Height="32" Width="200" TextAlignment="Right"/>
-        <CheckBox x:Name="tempNotifCheck" Content="Receive Temperature Notifications" HorizontalAlignment="Left" Margin="26,130,0,0" VerticalAlignment="Top" Checked="tempNotifCheck_Checked" Unchecked="tempNotifCheck_Unchecked" Height="16" Width="199" IsEnabled="False"/>
-        <TextBlock HorizontalAlignment="Left" Margin="45,60,0,0" TextWrapping="Wrap" Text="Pressure" VerticalAlignment="Top" FontSize="18" Grid.Column="1" Height="24" Width="67"/>
-        <TextBlock x:Name="pressureBox" HorizontalAlignment="Left" Margin="35,84,0,0" Text="{Binding Path=Pressure, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" Grid.Column="1" Height="32" Width="200" TextAlignment="Right"/>
-        <CheckBox x:Name="pressureNotifCheck" Content="Receive Pressure Notifications" Margin="45,130,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Checked="pressureNotifCheck_Checked" Unchecked="pressureNotifCheck_Unchecked" Grid.Column="1" Height="16" Width="176" IsEnabled="False"/>
-        <Slider x:Name="motorSlider" HorizontalAlignment="Left" Margin="47,172,0,0" VerticalAlignment="Top" Orientation="Vertical" RenderTransformOrigin="-0.136,0.7" Height="118" Width="22" ValueChanged="motorSlider_ValueChanged" Thumb.DragStarted="motorSlider_DragStarted" Thumb.DragCompleted="motorSlider_DragCompleted" IsEnabled="False"/>
-        <TextBlock HorizontalAlignment="Left" Margin="20,151,0,0" TextWrapping="Wrap" Text="Motor Speed" VerticalAlignment="Top" Height="16" Width="83"/>
-        <TextBlock x:Name="addrBox" HorizontalAlignment="Left" Margin="157,7,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="1" Height="32" Width="100"><Run Text="{Binding Path=StackAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/><LineBreak/><Run/></TextBlock>
-        <TextBlock HorizontalAlignment="Left" Margin="5,10,0,0" TextWrapping="Wrap" Text="Dongle Port:" VerticalAlignment="Top" Height="16" Width="76" TextAlignment="Right"/>
-        <TextBox x:Name="portNameBox" HorizontalAlignment="Left" Height="19" Margin="86,7,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="80" Text="COM11"/>
-        <Button x:Name="connectBtn" Content="Connect" HorizontalAlignment="Left" Margin="171,7,0,0" VerticalAlignment="Top" Width="75" Click="connectBtn_Click" Height="46"/>
-        <Button x:Name="readAddrBtn" Content="Read Address" HorizontalAlignment="Left" Margin="58,4,0,0" VerticalAlignment="Top" Width="83" Click="Button_Click_1" Grid.Column="1" Height="22" IsEnabled="False"/>
-        <CheckBox x:Name="thermoControllerCheck" Content="Thermo-controller" HorizontalAlignment="Left" Margin="132,151,0,0" VerticalAlignment="Top" Height="16" Width="114" Checked="thermoControllerCheck_Checked" Unchecked="thermoControllerCheck_Unchecked" IsEnabled="False"/>
-        <Slider x:Name="setpointSlider" HorizontalAlignment="Left" Margin="183,172,0,0" VerticalAlignment="Top" Orientation="Vertical" ValueChanged="Slider_ValueChanged" Thumb.DragStarted="Slider_DragStarted" Thumb.DragCompleted="Slider_DragCompleted" Width="25" Height="118" IsEnabled="False"/>
-        <TextBlock x:Name="setpointBox" HorizontalAlignment="Left" Margin="139,295,0,0" TextWrapping="Wrap" Text="Setpoint: 20 deg C" VerticalAlignment="Top" Width="117"/>
-        <TextBlock x:Name="motorSpeedBox" HorizontalAlignment="Left" Margin="47,295,0,0" TextWrapping="Wrap" Text="Off" VerticalAlignment="Top" TextAlignment="Center"/>
-        <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,180,0,0" TextWrapping="Wrap" Text="Haptic Preset:" VerticalAlignment="Top" RenderTransformOrigin="0.521,0.021"/>
-        <TextBox x:Name="hapticPresetBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="88,177,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="53"/>
-        <Button x:Name="hapticPresetSendBox" Content="Send" Grid.Column="1" HorizontalAlignment="Left" Margin="146,177,0,0" VerticalAlignment="Top" Width="75" Click="hapticPresetSendBox_Click" IsEnabled="False"/>
-        <CheckBox x:Name="record" Content="Record Temperature Data" Grid.Column="1" HorizontalAlignment="Left" Margin="58,37,0,0" VerticalAlignment="Top" Checked="record_Checked" Unchecked="record_Unchecked" IsEnabled="False"/>
-        <ComboBox x:Name="psocComboBox" SelectedValuePath="Content" HorizontalAlignment="Left" Margin="86,31,0,0" VerticalAlignment="Top" Width="80">
+        <TextBlock HorizontalAlignment="Left" Margin="26,60,0,0" TextWrapping="Wrap" Text="Temperature" VerticalAlignment="Top" FontSize="18" RenderTransformOrigin="0.502,0.89" Height="24" Width="102" Grid.ColumnSpan="3"/>
+        <TextBlock x:Name="tempBox" HorizontalAlignment="Left" Margin="33,84,0,0" Text="{Binding Path=Temperature, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" Height="32" Width="200" TextAlignment="Right" Grid.ColumnSpan="3"/>
+        <CheckBox x:Name="tempNotifCheck" Content="Receive Temperature Notifications" HorizontalAlignment="Left" Margin="26,130,0,0" VerticalAlignment="Top" Checked="tempNotifCheck_Checked" Unchecked="tempNotifCheck_Unchecked" Height="16" Width="199" IsEnabled="False" Grid.ColumnSpan="3"/>
+        <TextBlock HorizontalAlignment="Left" Margin="45,60,0,0" TextWrapping="Wrap" Text="Pressure" VerticalAlignment="Top" FontSize="18" Grid.Column="3" Height="24" Width="67"/>
+        <TextBlock x:Name="pressureBox" HorizontalAlignment="Left" Margin="35,84,0,0" Text="{Binding Path=Pressure, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" Grid.Column="3" Height="32" Width="200" TextAlignment="Right"/>
+        <CheckBox x:Name="pressureNotifCheck" Content="Receive Pressure Notifications" Margin="45,130,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Checked="pressureNotifCheck_Checked" Unchecked="pressureNotifCheck_Unchecked" Grid.Column="3" Height="16" Width="176" IsEnabled="False"/>
+        <Slider x:Name="motorSlider" HorizontalAlignment="Left" Margin="47,172,0,0" VerticalAlignment="Top" Orientation="Vertical" RenderTransformOrigin="-0.136,0.7" Height="118" Width="22" ValueChanged="motorSlider_ValueChanged" Thumb.DragStarted="motorSlider_DragStarted" Thumb.DragCompleted="motorSlider_DragCompleted" IsEnabled="False" Grid.ColumnSpan="2"/>
+        <TextBlock HorizontalAlignment="Left" Margin="20,151,0,0" TextWrapping="Wrap" Text="Motor Speed" VerticalAlignment="Top" Height="16" Width="83" Grid.ColumnSpan="2"/>
+        <TextBlock x:Name="addrBox" HorizontalAlignment="Left" Margin="157,7,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="3" Height="32" Width="100"><Run Text="{Binding Path=StackAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/><LineBreak/><Run/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="5,10,0,0" TextWrapping="Wrap" Text="Dongle Port:" VerticalAlignment="Top" Height="16" Width="76" TextAlignment="Right" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="portNameBox" HorizontalAlignment="Left" Height="19" Margin="29,7,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="80" Text="COM14" Grid.Column="1" Grid.ColumnSpan="2" TextChanged="portNameBox_TextChanged"/>
+        <Button x:Name="connectBtn" Content="Connect" HorizontalAlignment="Left" Margin="64.286,7,0,0" VerticalAlignment="Top" Width="75" Click="connectBtn_Click" Height="46" Grid.Column="2"/>
+        <Button x:Name="readAddrBtn" Content="Read Address" HorizontalAlignment="Left" Margin="58,4,0,0" VerticalAlignment="Top" Width="83" Click="Button_Click_1" Grid.Column="3" Height="22" IsEnabled="False"/>
+        <CheckBox x:Name="thermoControllerCheck" Content="Thermo-controller" HorizontalAlignment="Left" Margin="25.286,151,0,0" VerticalAlignment="Top" Height="16" Width="114" Checked="thermoControllerCheck_Checked" Unchecked="thermoControllerCheck_Unchecked" IsEnabled="False" Grid.Column="2"/>
+        <Slider x:Name="setpointSlider" HorizontalAlignment="Left" Margin="76.286,172,0,0" VerticalAlignment="Top" Orientation="Vertical" ValueChanged="Slider_ValueChanged" Thumb.DragStarted="Slider_DragStarted" Thumb.DragCompleted="Slider_DragCompleted" Width="25" Height="118" IsEnabled="False" Grid.Column="2"/>
+        <TextBlock x:Name="setpointBox" HorizontalAlignment="Left" Margin="32.286,295,0,0" TextWrapping="Wrap" Text="Setpoint: 20 deg C" VerticalAlignment="Top" Width="117" Grid.Column="2"/>
+        <TextBlock x:Name="motorSpeedBox" HorizontalAlignment="Left" Margin="47,295,0,0" TextWrapping="Wrap" Text="Off" VerticalAlignment="Top" TextAlignment="Center" Grid.ColumnSpan="2"/>
+        <TextBlock Grid.Column="3" HorizontalAlignment="Left" Margin="10,180,0,0" TextWrapping="Wrap" Text="Haptic Preset:" VerticalAlignment="Top" RenderTransformOrigin="0.521,0.021"/>
+        <TextBox x:Name="hapticPresetBox" Grid.Column="3" HorizontalAlignment="Left" Height="23" Margin="88,177,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="53"/>
+        <Button x:Name="hapticPresetSendBox" Content="Send" Grid.Column="3" HorizontalAlignment="Left" Margin="146,177,0,0" VerticalAlignment="Top" Width="75" Click="hapticPresetSendBox_Click" IsEnabled="False"/>
+        <CheckBox x:Name="record" Content="Record Temperature Data" Grid.Column="3" HorizontalAlignment="Left" Margin="58,37,0,0" VerticalAlignment="Top" Checked="record_Checked" Unchecked="record_Unchecked" IsEnabled="False"/>
+        <ComboBox x:Name="psocComboBox" SelectedValuePath="Content" HorizontalAlignment="Left" Margin="29,31,0,0" VerticalAlignment="Top" Width="80" Grid.Column="1" Grid.ColumnSpan="2">
             <ComboBoxItem Name="psoc_00795">00795</ComboBoxItem>
             <ComboBoxItem Name="psoc_00392" IsSelected="True">00392</ComboBoxItem>
         </ComboBox>
-        <TextBlock HorizontalAlignment="Left" Margin="51,37,0,0" TextWrapping="Wrap" Text="PSoC:" VerticalAlignment="Top" RenderTransformOrigin="0.4,0.062" TextAlignment="Right"/>
-        <TextBox x:Name="commandInput" HorizontalAlignment="Left" Height="34" Margin="5,351,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="433" Grid.ColumnSpan="2" KeyDown="inputKeyDown" IsEnabled="False"/>
-        <Button x:Name="commandSend" Content="Send" Grid.Column="1" HorizontalAlignment="Left" Margin="187,351,0,0" VerticalAlignment="Top" Width="64" Height="34" Click="commandSend_Click" IsEnabled="False"/>
-        <TextBlock HorizontalAlignment="Left" Margin="5,335,0,0" TextWrapping="Wrap" Text="Command Prompt" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="51,37,0,0" TextWrapping="Wrap" Text="PSoC:" VerticalAlignment="Top" RenderTransformOrigin="0.4,0.062" TextAlignment="Right" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="commandInput" HorizontalAlignment="Left" Height="34" Margin="5,351,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="433" Grid.ColumnSpan="4" KeyDown="inputKeyDown" IsEnabled="False"/>
+        <Button x:Name="commandSend" Content="Send" Grid.Column="3" HorizontalAlignment="Left" Margin="187,351,0,0" VerticalAlignment="Top" Width="64" Height="34" Click="commandSend_Click" IsEnabled="False"/>
+        <TextBlock HorizontalAlignment="Left" Margin="5,335,0,0" TextWrapping="Wrap" Text="Command Prompt" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>
